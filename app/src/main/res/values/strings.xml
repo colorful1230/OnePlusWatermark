@@ -6,12 +6,11 @@
     <string name="choose_tip">请选择需要编辑的图片</string>
     <string name="edit_save">保存</string>
     <string name="edit_open">选择</string>
-    <string name="edit_blur_level">模糊度</string>
     <string name="edit_saving">保存中…</string>
     <string name="edit_saved">保存到</string>
     <string name="edit_not_edit">请先编辑图片</string>
 
-    <string name="about_my_github">https://github.com/zhaolin1230/SimpleBlurApp.git</string>
+    <string name="about_my_github">https://github.com/zhaolin1230/OnePlusWatermark.git</string>
     <string name="about_open_source">开源项目</string>
     <string name="about_open_source_git">[matisse]\n[permissionsdispatcher]</string>
 </resources>
