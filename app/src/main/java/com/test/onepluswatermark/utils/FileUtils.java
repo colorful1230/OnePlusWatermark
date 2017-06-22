@@ -27,7 +27,7 @@ public class FileUtils {
     @Nullable
     public static String saveBitmap(Context context, Bitmap bitmap) {
         String saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                .getAbsolutePath();
+                .getAbsolutePath() + File.separator + "OnePlus";
         File dir = new File(saveDir);
         if (!dir.exists()) {
             dir.mkdirs();
