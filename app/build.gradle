@@ -31,6 +31,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
+    compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 }

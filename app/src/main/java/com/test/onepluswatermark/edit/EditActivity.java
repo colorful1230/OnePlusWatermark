@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.test.onepluswatermark.R;
 import com.test.onepluswatermark.about.AboutActivity;
 import com.test.onepluswatermark.data.ImageInfo;
@@ -39,6 +40,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashReport.initCrashReport(this);
+
         setContentView(R.layout.activity_edit);
         initToolbar();
 
