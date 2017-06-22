@@ -69,7 +69,7 @@ public class EditActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.edit_save_item:
-                mPresenter.saveImage();
+                mPresenter.saveImage(getApplicationContext());
                 break;
             case R.id.edit_open_item:
                 EditActivityPermissionsDispatcher.gotoMatisseWithCheck(this);

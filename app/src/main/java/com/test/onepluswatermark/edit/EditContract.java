@@ -1,5 +1,6 @@
 package com.test.onepluswatermark.edit;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -15,7 +16,7 @@ public interface EditContract {
 
     interface Presenter extends BasePresenter {
 
-        void saveImage();
+        void saveImage(Context context);
 
         void showImage(ImageInfo imageInfo);
 

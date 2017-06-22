@@ -1,6 +1,7 @@
 package com.test.onepluswatermark.edit;
 
 import android.Manifest;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -30,8 +31,8 @@ public class EditPresenter implements EditContract.Presenter {
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @Override
-    public void saveImage() {
-        new SaveImageTask().execute();
+    public void saveImage(Context context) {
+        new SaveImageTask(context).execute();
     }
 
     @Override
@@ -40,6 +41,12 @@ public class EditPresenter implements EditContract.Presenter {
     }
 
     private class SaveImageTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+
+        public SaveImageTask(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -52,7 +59,7 @@ public class EditPresenter implements EditContract.Presenter {
                 return null;
             }
 
-            String path = FileUtils.saveBitmap(bitmap);
+            String path = FileUtils.saveBitmap(context, bitmap);
             if (TextUtils.isEmpty(path)) {
                 return null;
             }

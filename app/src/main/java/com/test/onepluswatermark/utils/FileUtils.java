@@ -22,18 +22,18 @@ public class FileUtils {
 
     private static final String FILE_NAME_PREFIX = "watermark_";
 
-    private static final String FILE_NAME_SUFFIX = ".jpeg";
+    private static final String FILE_NAME_SUFFIX = ".jpg";
 
     @Nullable
-    public static String saveBitmap(Bitmap bitmap) {
+    public static String saveBitmap(Context context, Bitmap bitmap) {
         String saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                .getAbsolutePath() + File.separator + "OnePlus";
+                .getAbsolutePath();
         File dir = new File(saveDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String date = dateFormat.format(new Date());
 
         String name = saveDir + File.separator + FILE_NAME_PREFIX + date + FILE_NAME_SUFFIX;
@@ -44,6 +44,7 @@ public class FileUtils {
                 outputStream = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
                 outputStream.flush();
+                MediaStore.Images.Media.insertImage(context.getContentResolver(), name, "", "");
                 return file.getAbsolutePath();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,12 +63,14 @@ public class FileUtils {
     }
 
     public static String getRealFilePath(final Context context, final Uri uri ) {
-        if ( null == uri ) return null;
+        if ( null == uri ) {
+            return null;
+        }
         final String scheme = uri.getScheme();
         String data = null;
-        if ( scheme == null )
+        if ( scheme == null ) {
             data = uri.getPath();
-        else if ( ContentResolver.SCHEME_FILE.equals( scheme ) ) {
+        } else if ( ContentResolver.SCHEME_FILE.equals( scheme ) ) {
             data = uri.getPath();
         } else if ( ContentResolver.SCHEME_CONTENT.equals( scheme ) ) {
             Cursor cursor = context.getContentResolver().query( uri, new String[] { MediaStore.Images.ImageColumns.DATA }, null, null, null );
