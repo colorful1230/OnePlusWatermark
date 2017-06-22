@@ -50,7 +50,7 @@ public class EditFragment extends Fragment implements EditContract.View {
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setAlpha((int) (255 * 1.0f * 0.8));
+        mPaint.setAlpha((int) (255 * 1.0f * 0.7));
 
         String device = Build.MODEL;
         Log.d(TAG, "onCreateView: " + device);
@@ -131,7 +131,7 @@ public class EditFragment extends Fragment implements EditContract.View {
             watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_default);
         }
         int width = mEditBitmap.getWidth() / 3;
-        int margin = width / 10;
+        int margin = width / 12;
         float scale = width * 1.0f / watermark.getWidth();
         Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int)(watermark.getWidth() * scale),
                 (int)(watermark.getHeight() * scale));
