@@ -70,7 +70,11 @@ public class EditPresenter implements EditContract.Presenter {
         @Override
         protected void onPostExecute(String s) {
             if (mView != null) {
-                mView.showSaveSuccess(s);
+                if (TextUtils.isEmpty(s)) {
+                    mView.showNotEditTip();
+                } else {
+                    mView.showSaveSuccess(s);
+                }
             }
         }
     }
