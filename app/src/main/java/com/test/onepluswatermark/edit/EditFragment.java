@@ -1,5 +1,6 @@
 package com.test.onepluswatermark.edit;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,6 +46,8 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private String mDeviceMode;
 
+    private Context mContext;
+
     public static EditFragment newInstance() {
         return new EditFragment();
     }
@@ -60,7 +64,7 @@ public class EditFragment extends Fragment implements EditContract.View {
         mPaint.setColor(Color.WHITE);
 
         mDeviceMode = Build.DEVICE;
-
+        mContext = getContext();
         return root;
     }
 
@@ -93,17 +97,19 @@ public class EditFragment extends Fragment implements EditContract.View {
         options.inMutable = true;
         options.inSampleSize = 1;
         mEditBitmap = BitmapFactory.decodeFile(path, options);
-        addWatermark();
+        if (mEditBitmap != null) {
+            addWatermark(mEditBitmap);
+        }
     }
 
 
     @Override
     public void showSaveTip() {
-        if (mSavingToast == null) {
-            mSavingToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.edit_saving),
+        if (mSavingToast == null && mContext != null) {
+            mSavingToast = Toast.makeText(mContext, mContext.getResources().getString(R.string.edit_saving),
                     Toast.LENGTH_SHORT);
+            mSavingToast.show();
         }
-        mSavingToast.show();
     }
 
     @Override
@@ -111,8 +117,10 @@ public class EditFragment extends Fragment implements EditContract.View {
         if (mSavingToast != null) {
             mSavingToast.cancel();
         }
-        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.edit_saved) + path,
-                Toast.LENGTH_SHORT).show();
+        if (mContext != null) {
+            Toast.makeText(mContext, getActivity().getResources().getString(R.string.edit_saved) + path,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -126,21 +134,21 @@ public class EditFragment extends Fragment implements EditContract.View {
         return mEditBitmap;
     }
 
-    private void addWatermark() {
-        Canvas canvas = new Canvas(mEditBitmap);
+    private void addWatermark(@NonNull Bitmap bitmap) {
+        Canvas canvas = new Canvas(bitmap);
         Bitmap watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_icon);
 
-        int width = mEditBitmap.getWidth() / 20;
+        int width = bitmap.getWidth() / 20;
         int margin = width / 3;
         float scale = width * 1.0f / watermark.getWidth();
         Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int)(watermark.getWidth() * scale),
                 (int)(watermark.getHeight() * scale));
-        canvas.drawBitmap(scaleBitmap, margin, mEditBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
+        canvas.drawBitmap(scaleBitmap, margin, bitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
         mPaint.setTextSize(BASE_TEXT_SIZE * scale);
         Rect rect = new Rect();
         mPaint.getTextBounds(mDeviceMode, 0, mDeviceMode.length(), rect);
         canvas.drawText(mDeviceMode, margin * 2 + scaleBitmap.getWidth(),
-                mEditBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
-        mEditImageView.setImageBitmap(mEditBitmap);
+                bitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
+        mEditImageView.setImageBitmap(bitmap);
     }
 }
