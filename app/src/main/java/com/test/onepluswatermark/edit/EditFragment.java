@@ -1,5 +1,6 @@
 package com.test.onepluswatermark.edit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -60,8 +61,6 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
 
     private Context mContext;
 
-    private EditText mTagEditText;
-
     public static EditFragment newInstance() {
         return new EditFragment();
     }
@@ -101,17 +100,24 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
         options.inSampleSize = 1;
-        mEditBitmap = BitmapFactory.decodeFile(path, options);
-        mCanvasBitmap = Bitmap.createBitmap(mEditBitmap, 0, 0, mEditBitmap.getWidth(),
-                mEditBitmap.getHeight());
-        addWatermark();
+        try {
+            mEditBitmap = BitmapFactory.decodeFile(path, options);
+            mCanvasBitmap = Bitmap.createBitmap(mEditBitmap, 0, 0, mEditBitmap.getWidth(),
+                    mEditBitmap.getHeight());
+            addWatermark();
+        } catch (Throwable ignore) {
+            if (mContext != null) {
+                Toast.makeText(mContext, getString(R.string.edit_load_file_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
 
     @Override
     public void showSaveTip() {
         if (mSavingToast == null && mContext != null) {
-            mSavingToast = Toast.makeText(mContext, mContext.getResources().getString(R.string.edit_saving),
+            mSavingToast = Toast.makeText(mContext, getString(R.string.edit_saving),
                     Toast.LENGTH_SHORT);
             mSavingToast.show();
         }
@@ -123,7 +129,7 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
             mSavingToast.cancel();
         }
         if (mContext != null) {
-            Toast.makeText(mContext, mContext.getString(R.string.edit_saved) + path,
+            Toast.makeText(mContext, getString(R.string.edit_saved) + path,
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -141,57 +147,74 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
     }
 
     private void addWatermark() {
+        if (mCanvasBitmap == null || mEditBitmap == null || mPaint == null) {
+            return;
+        }
         Canvas canvas = new Canvas(mCanvasBitmap);
-        Bitmap watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_icon);
-        canvas.drawBitmap(mEditBitmap, 0, 0, mPaint);
-        int width = mCanvasBitmap.getWidth() / 16;
-        int margin = width / 3;
-        float scale = width * 1.0f / watermark.getWidth();
-        Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int)(watermark.getWidth() * scale),
-                (int)(watermark.getHeight() * scale));
-        canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
-        mPaint.setTextSize(BASE_TEXT_SIZE * scale);
-        Rect rect = new Rect();
-        mPaint.getTextBounds(mDeviceMode, 0, mDeviceMode.length(), rect);
-        mPaint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText(mDeviceMode, margin * 2 + scaleBitmap.getWidth(),
-                mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
-        mEditImageView.setImageBitmap(mCanvasBitmap);
+        Bitmap watermark = null;
+        try {
+            watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_icon);
+        } catch (Throwable ignore) {
+
+        }
+
+        if (watermark != null) {
+
+            int width = mCanvasBitmap.getWidth() / 16;
+            int margin = width / 3;
+            float scale = width * 1.0f / watermark.getWidth();
+
+            Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int) (watermark.getWidth() * scale),
+                    (int) (watermark.getHeight() * scale));
+            mPaint.setTextSize(BASE_TEXT_SIZE * scale);
+            Rect rect = new Rect();
+            mPaint.getTextBounds(mDeviceMode, 0, mDeviceMode.length(), rect);
+            mPaint.setTextAlign(Paint.Align.LEFT);
+
+            canvas.drawBitmap(mEditBitmap, 0, 0, mPaint);
+            canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
+            canvas.drawText(mDeviceMode, margin * 2 + scaleBitmap.getWidth(),
+                    mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
+
+            mEditImageView.setImageBitmap(mCanvasBitmap);
+        }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.edit_edit_button) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View view = inflater.inflate(R.layout.dialog_edit_tag, null);
-            mTagEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
-            mTagEditText.setHint(Build.DEVICE);
-            if (!Build.DEVICE.equalsIgnoreCase(mDeviceMode)) {
-                mTagEditText.setText(mDeviceMode);
-            }
-            final CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_save_checkbox);
+            if (mContext != null) {
+                LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_edit_tag, null);
+                final EditText tagEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
+                tagEditText.setHint(Build.DEVICE);
+                if (!Build.DEVICE.equalsIgnoreCase(mDeviceMode)) {
+                    tagEditText.setText(mDeviceMode);
+                }
+                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_save_checkbox);
 
-            new AlertDialog.Builder(mContext, R.style.Dialog).setView(view)
-                    .setTitle(getResources().getString(R.string.edit_dialog_title))
-                    .setNegativeButton(getResources().getString(R.string.edit_dialog_cancel),
-                            new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                new AlertDialog.Builder(mContext, R.style.Dialog).setView(view)
+                        .setTitle(getResources().getString(R.string.edit_dialog_title))
+                        .setNegativeButton(getResources().getString(R.string.edit_dialog_cancel),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }).setPositiveButton(getResources().getString(R.string.edit_dialog_save),
-                            new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String tag = mTagEditText.getText().toString();
-                            if (checkBox.isChecked() && !Build.DEVICE.equalsIgnoreCase(tag)) {
-                                FileUtils.writeSharePreference(getContext(), KEY_EDIT_TAG, tag);
+                                    }
+                                }).setPositiveButton(getResources().getString(R.string.edit_dialog_save),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String tag = tagEditText.getText().toString();
+                                if (checkBox.isChecked() && !Build.DEVICE.equalsIgnoreCase(tag)) {
+                                    FileUtils.writeSharePreference(getContext(), KEY_EDIT_TAG, tag);
+                                }
+                                mDeviceMode = TextUtils.isEmpty(tag) ? Build.DEVICE : tag;
+                                addWatermark();
                             }
-                            mDeviceMode = TextUtils.isEmpty(tag) ? Build.DEVICE : tag;
-                            addWatermark();
-                        }
-                    }).create().show();
+                        }).create().show();
+            }
         }
     }
 

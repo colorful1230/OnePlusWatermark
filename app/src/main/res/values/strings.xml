@@ -9,6 +9,7 @@
     <string name="edit_saving">保存中…</string>
     <string name="edit_saved">保存到</string>
     <string name="edit_not_edit">请先编辑图片</string>
+    <string name="edit_load_file_failed">图片加载失败, 请重试:(</string>
 
     <string name="edit_dialog_title">编辑水印</string>
     <string name="edit_dialog_tag_text">水印</string>
