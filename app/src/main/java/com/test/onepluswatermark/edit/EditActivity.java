@@ -21,7 +21,9 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -108,10 +110,18 @@ public class EditActivity extends AppCompatActivity {
         EditActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+    }
+
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     public void gotoMatisse() {
+        Set<MimeType> types = new HashSet<>();
+        types.add(MimeType.JPEG);
+        types.add(MimeType.PNG);
         Matisse.from(this)
-                .choose(MimeType.allOf())
+                .choose(types)
                 .countable(true)
                 .maxSelectable(1)
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)

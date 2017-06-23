@@ -10,6 +10,12 @@
     <string name="edit_saved">保存到</string>
     <string name="edit_not_edit">请先编辑图片</string>
 
+    <string name="edit_dialog_title">编辑水印</string>
+    <string name="edit_dialog_tag_text">水印</string>
+    <string name="edit_dialog_save">保存</string>
+    <string name="edit_dialog_cancel">取消</string>
+    <string name="edit_dialog_remember">记住</string>
+
     <string name="about_my_github">https://github.com/zhaolin1230/OnePlusWatermark.git</string>
     <string name="about_open_source">开源项目</string>
     <string name="about_open_source_git">[matisse]\n[permissionsdispatcher]</string>

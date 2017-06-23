@@ -2,12 +2,15 @@ package com.test.onepluswatermark.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +25,9 @@ public class FileUtils {
 
     private static final String FILE_NAME_PREFIX = "watermark_";
 
-    private static final String FILE_NAME_SUFFIX = ".jpg";
+    private static final String FILE_NAME_SUFFIX = ".jpeg";
+
+    private static final String SP_FILE_NAME = "pref";
 
     @Nullable
     public static String saveBitmap(Context context, Bitmap bitmap) {
@@ -85,5 +90,34 @@ public class FileUtils {
             }
         }
         return data;
+    }
+
+    public static void writeSharePreference(Context context, String key, String value) {
+        if (context == null) {
+            return;
+        }
+
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            return;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    @Nullable
+    public static String readSharePreference(Context context, String key) {
+        if (context == null) {
+            return null;
+        }
+
+        if (TextUtils.isEmpty(key)) {
+            return null;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
+        return sp.getString(key, null);
     }
 }

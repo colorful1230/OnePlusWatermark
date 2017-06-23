@@ -26,7 +26,7 @@
             android:value="10000" />
         <meta-data
             android:name="BUGLY_ENABLE_DEBUG"
-            android:value="false" />
+            android:value="true" />
 
         <activity android:name=".edit.EditActivity"
             android:screenOrientation="portrait">
