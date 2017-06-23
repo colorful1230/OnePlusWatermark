@@ -38,7 +38,8 @@
         </activity>
         <activity android:name=".about.AboutActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".edit.EditActivity"/>
+            android:parentActivityName=".edit.EditActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
