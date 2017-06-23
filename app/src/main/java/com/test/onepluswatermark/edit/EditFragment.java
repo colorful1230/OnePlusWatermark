@@ -3,7 +3,9 @@ package com.test.onepluswatermark.edit;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +30,8 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private static final String TAG = "EditFragment";
 
+    private static final int BASE_TEXT_SIZE = 340;
+
     private ImageView mEditImageView;
 
     private EditContract.Presenter mPresenter;
@@ -37,6 +41,8 @@ public class EditFragment extends Fragment implements EditContract.View {
     private Bitmap mEditBitmap;
 
     private Paint mPaint;
+
+    private String mDeviceMode;
 
     public static EditFragment newInstance() {
         return new EditFragment();
@@ -51,9 +57,9 @@ public class EditFragment extends Fragment implements EditContract.View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setAlpha((int) (255 * 1.0f * 0.7));
+        mPaint.setColor(Color.WHITE);
 
-        String device = Build.MODEL;
-        Log.d(TAG, "onCreateView: " + device);
+        mDeviceMode = Build.DEVICE;
 
         return root;
     }
@@ -122,20 +128,19 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private void addWatermark() {
         Canvas canvas = new Canvas(mEditBitmap);
-        Bitmap watermark = null;
-        if (Build.DEVICE.equalsIgnoreCase("OnePlus3")) {
-            watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_3);
-        } else if (Build.DEVICE.equalsIgnoreCase("OnePlus3T")) {
-            watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_3t);
-        } else {
-            watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_default);
-        }
-        int width = mEditBitmap.getWidth() / 3;
-        int margin = width / 12;
+        Bitmap watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_icon);
+
+        int width = mEditBitmap.getWidth() / 18;
+        int margin = width / 3;
         float scale = width * 1.0f / watermark.getWidth();
         Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int)(watermark.getWidth() * scale),
                 (int)(watermark.getHeight() * scale));
         canvas.drawBitmap(scaleBitmap, margin, mEditBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
+        mPaint.setTextSize(BASE_TEXT_SIZE * scale);
+        Rect rect = new Rect();
+        mPaint.getTextBounds(mDeviceMode, 0, mDeviceMode.length(), rect);
+        canvas.drawText(mDeviceMode, margin * 2 + scaleBitmap.getWidth(),
+                mEditBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
         mEditImageView.setImageBitmap(mEditBitmap);
     }
 }
