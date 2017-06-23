@@ -30,7 +30,7 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private static final String TAG = "EditFragment";
 
-    private static final int BASE_TEXT_SIZE = 340;
+    private static final int BASE_TEXT_SIZE = 320;
 
     private ImageView mEditImageView;
 
@@ -130,7 +130,7 @@ public class EditFragment extends Fragment implements EditContract.View {
         Canvas canvas = new Canvas(mEditBitmap);
         Bitmap watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark_icon);
 
-        int width = mEditBitmap.getWidth() / 18;
+        int width = mEditBitmap.getWidth() / 20;
         int margin = width / 3;
         float scale = width * 1.0f / watermark.getWidth();
         Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int)(watermark.getWidth() * scale),
