@@ -3,6 +3,7 @@ package com.test.onepluswatermark.edit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -35,7 +37,7 @@ import com.test.onepluswatermark.utils.FileUtils;
  * Created by zhaolin on 17-6-11.
  */
 
-public class EditFragment extends Fragment implements EditContract.View, View.OnClickListener {
+public class EditFragment extends Fragment implements EditContract.View {
 
     private static final String TAG = "EditFragment";
 
@@ -44,8 +46,6 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
     private static final int BASE_TEXT_SIZE = 340;
 
     private ImageView mEditImageView;
-
-    private FloatingActionButton mEditButton;
 
     private EditContract.Presenter mPresenter;
 
@@ -70,8 +70,6 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragmment_edit, container, false);
         mEditImageView = (ImageView) root.findViewById(R.id.edit_image_view);
-        mEditButton = (FloatingActionButton) root.findViewById(R.id.edit_edit_button);
-        mEditButton.setOnClickListener(this);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -95,8 +93,13 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
     @Override
     public void showImage(Uri uri) {
         mEditImageView.setVisibility(View.VISIBLE);
-        mEditButton.setVisibility(View.VISIBLE);
         String path = FileUtils.getRealFilePath(getContext(), uri);
+        showImage(path);
+    }
+
+    @Override
+    public void showImage(String path) {
+        mEditImageView.setVisibility(View.VISIBLE);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
         options.inSampleSize = 1;
@@ -110,7 +113,6 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
                 Toast.makeText(mContext, getString(R.string.edit_load_file_failed), Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
 
@@ -177,44 +179,6 @@ public class EditFragment extends Fragment implements EditContract.View, View.On
                     mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
 
             mEditImageView.setImageBitmap(mCanvasBitmap);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.edit_edit_button) {
-            if (mContext != null) {
-                LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-                View view = inflater.inflate(R.layout.dialog_edit_tag, null);
-                final EditText tagEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
-                tagEditText.setHint(Build.DEVICE);
-                if (!Build.DEVICE.equalsIgnoreCase(mDeviceMode)) {
-                    tagEditText.setText(mDeviceMode);
-                }
-                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_save_checkbox);
-
-                new AlertDialog.Builder(mContext, R.style.Dialog).setView(view)
-                        .setTitle(getResources().getString(R.string.edit_dialog_title))
-                        .setNegativeButton(getResources().getString(R.string.edit_dialog_cancel),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                }).setPositiveButton(getResources().getString(R.string.edit_dialog_save),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String tag = tagEditText.getText().toString();
-                                if (checkBox.isChecked() && !Build.DEVICE.equalsIgnoreCase(tag)) {
-                                    FileUtils.writeSharePreference(getContext(), KEY_EDIT_TAG, tag);
-                                }
-                                mDeviceMode = TextUtils.isEmpty(tag) ? Build.DEVICE : tag;
-                                addWatermark();
-                            }
-                        }).create().show();
-            }
         }
     }
 

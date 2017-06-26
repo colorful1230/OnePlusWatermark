@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="base setting" >
+        <CheckBoxPreference
+            android:key="double_line_preference"
+            android:summary="double line"
+            android:title="double line" />
+
+        <EditTextPreference
+            android:key="first_line_preference"
+            android:summary="first line"
+            android:title="first_line" />
+
+        <EditTextPreference
+            android:key="second_line_preference"
+            android:summary="second line"
+            android:title="second_line" />
+
+        <EditTextPreference
+            android:key="water_mark_preference"
+            android:summary="water_mark"
+            android:title="Watermark" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

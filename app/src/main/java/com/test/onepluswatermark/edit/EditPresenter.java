@@ -40,6 +40,11 @@ public class EditPresenter implements EditContract.Presenter {
         mView.showImage(imageInfo.getUri());
     }
 
+    @Override
+    public void showImage(String path) {
+        mView.showImage(path);
+    }
+
     private class SaveImageTask extends AsyncTask<Void, Void, String> {
 
         private Context context;

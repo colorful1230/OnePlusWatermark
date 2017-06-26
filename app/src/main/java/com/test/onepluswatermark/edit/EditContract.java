@@ -20,11 +20,14 @@ public interface EditContract {
 
         void showImage(ImageInfo imageInfo);
 
+        void showImage(String path);
     }
 
     interface View extends BaseView<Presenter> {
 
         void showImage(Uri uri);
+
+        void showImage(String path);
 
         void showSaveTip();
 

@@ -13,6 +13,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/edit_setting"
+        android:title="setting"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/edit_about"
         android:title="@string/action_about"
         app:showAsAction="never" />
