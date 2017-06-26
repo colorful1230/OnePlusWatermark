@@ -17,18 +17,9 @@ import com.test.onepluswatermark.R;
 import com.test.onepluswatermark.about.AboutActivity;
 import com.test.onepluswatermark.data.ImageInfo;
 import com.test.onepluswatermark.utils.ActivityUtils;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
-
-;
 
 @RuntimePermissions
 public class EditActivity extends AppCompatActivity {
@@ -95,9 +86,8 @@ public class EditActivity extends AppCompatActivity {
             mToolbar.setBackgroundColor(Color.TRANSPARENT);
             getWindow().getDecorView().setBackgroundColor(Color.BLACK);
 
-            List<Uri> selected = Matisse.obtainResult(data);
-            if (selected != null && selected.size() > 0) {
-                Uri uri = selected.get(0);
+            Uri uri = data.getData();
+            if (mPresenter != null) {
                 ImageInfo imageInfo = new ImageInfo(uri);
                 mPresenter.showImage(imageInfo);
             }
@@ -117,17 +107,9 @@ public class EditActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     public void gotoMatisse() {
-        Set<MimeType> types = new HashSet<>();
-        types.add(MimeType.JPEG);
-        types.add(MimeType.PNG);
-        Matisse.from(this)
-                .choose(types)
-                .countable(true)
-                .maxSelectable(1)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                .imageEngine(new PicassoEngine())
-                .forResult(REQUEST_CODE_CHOOSE);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_CHOOSE);
     }
 
 }

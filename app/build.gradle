@@ -27,9 +27,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 
-    compile 'com.zhihu.android:matisse:0.4.3'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
     compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
