@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +15,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.test.onepluswatermark.R;
+import com.test.onepluswatermark.utils.Constants;
 import com.test.onepluswatermark.utils.FileUtils;
 
 /**
@@ -115,6 +118,12 @@ public class EditFragment extends Fragment implements EditContract.View {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSetting();
+        addWatermark();
+    }
 
     @Override
     public void showSaveTip() {
@@ -174,12 +183,32 @@ public class EditFragment extends Fragment implements EditContract.View {
             mPaint.setTextAlign(Paint.Align.LEFT);
 
             canvas.drawBitmap(mEditBitmap, 0, 0, mPaint);
-            canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
-            canvas.drawText(mDeviceMode, margin * 2 + scaleBitmap.getWidth(),
-                    mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
-
+            if (mDoubleLine) {
+                canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
+                canvas.drawText(mTitle, margin * 2 + scaleBitmap.getWidth(),
+                        mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight(), mPaint);
+                canvas.drawText(mSubtitle, margin * 2 + scaleBitmap.getWidth(),
+                        mCanvasBitmap.getHeight() - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
+            } else {
+                canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
+                canvas.drawText(mTitle, margin * 2 + scaleBitmap.getWidth(),
+                        mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
+            }
             mEditImageView.setImageBitmap(mCanvasBitmap);
         }
+    }
+
+    private boolean mDoubleLine;
+
+    private String mTitle;
+
+    private String mSubtitle;
+
+    private void getSetting() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mDoubleLine = sp.getBoolean(Constants.KEY_DOUBLE_LINE, false);
+        mTitle = sp.getString(Constants.KEY_TITLE, Build.DEVICE);
+        mSubtitle = sp.getString(Constants.KEY_SUBTITLE, "");
     }
 
 }

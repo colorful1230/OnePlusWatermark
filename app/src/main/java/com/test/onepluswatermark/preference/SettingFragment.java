@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.test.onepluswatermark.R;
+import com.test.onepluswatermark.utils.Constants;
 
 /**
  * Created by zhaolin on 17-6-26.
@@ -22,11 +23,6 @@ import com.test.onepluswatermark.R;
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "SettingFragment";
-
-    private static final String KEY_DOUBLE_LINE = "doubleLinePreference";
-    private static final String KEY_TITLE = "titlePreference";
-    private static final String KEY_SUBTITLE = "subTitlePreference";
-
 
     private CheckBoxPreference mDoubleLineCheckbox;
 
@@ -45,17 +41,17 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        mDoubleLineCheckbox = (CheckBoxPreference) findPreference(KEY_DOUBLE_LINE);
+        mDoubleLineCheckbox = (CheckBoxPreference) findPreference(Constants.KEY_DOUBLE_LINE);
         boolean check = mDoubleLineCheckbox.isChecked();
         mDoubleLineCheckbox.setChecked(check);
-        mTitleEditText = (EditTextPreference) findPreference(KEY_TITLE);
+        mTitleEditText = (EditTextPreference) findPreference(Constants.KEY_TITLE);
 
         String title = mTitleEditText.getText();
         if (TextUtils.isEmpty(title)) {
             title = Build.DEVICE;
         }
         mTitleEditText.setSummary(title);
-        mSubtitleEditText = (EditTextPreference) findPreference(KEY_SUBTITLE);
+        mSubtitleEditText = (EditTextPreference) findPreference(Constants.KEY_SUBTITLE);
         mSubtitleEditText.setSummary(mSubtitleEditText.getText());
 
         if (!check) {
@@ -75,12 +71,12 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferenceChanged: " + key);
-        if (key.equalsIgnoreCase(KEY_DOUBLE_LINE)) {
+        if (key.equalsIgnoreCase(Constants.KEY_DOUBLE_LINE)) {
             boolean checked = mDoubleLineCheckbox.isChecked();
             mSubtitleEditText.setEnabled(checked);
-        } else if (key.equalsIgnoreCase(KEY_TITLE)) {
+        } else if (key.equalsIgnoreCase(Constants.KEY_TITLE)) {
             mTitleEditText.setSummary(mTitleEditText.getText());
-        } else if (key.equalsIgnoreCase(KEY_SUBTITLE)) {
+        } else if (key.equalsIgnoreCase(Constants.KEY_SUBTITLE)) {
             mSubtitleEditText.setSummary(mSubtitleEditText.getText());
         }
     }
