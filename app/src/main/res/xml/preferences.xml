@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="base setting" >
+    <PreferenceCategory android:title="@string/setting_basic_title" >
         <CheckBoxPreference
-            android:key="double_line_preference"
-            android:summary="double line"
-            android:title="double line" />
+            android:key="doubleLinePreference"
+            android:title="@string/setting_double_line"/>
 
         <EditTextPreference
-            android:key="first_line_preference"
-            android:summary="first line"
-            android:title="first_line" />
+            android:key="titlePreference"
+            android:title="@string/setting_title" />
 
         <EditTextPreference
-            android:key="second_line_preference"
-            android:summary="second line"
-            android:title="second_line" />
+            android:key="subTitlePreference"
+            android:title="@string/setting_subtitle" />
 
-        <EditTextPreference
-            android:key="water_mark_preference"
-            android:summary="water_mark"
-            android:title="Watermark" />
+        <!--<EditTextPreference-->
+            <!--android:key="water_mark_preference"-->
+            <!--android:summary="water_mark"-->
+            <!--android:title="Watermark" />-->
 
     </PreferenceCategory>
 

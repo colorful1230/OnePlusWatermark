@@ -17,6 +17,12 @@
     <string name="edit_dialog_cancel">取消</string>
     <string name="edit_dialog_remember">记住</string>
 
+    <string name="setting_basic_title">基础设置</string>
+    <string name="setting_title">标题</string>
+    <string name="setting_subtitle">副标题</string>
+    <string name="setting_double_line">是否显示两行</string>
+    <string name="setting_label">设置</string>
+
     <string name="about_my_github">https://github.com/zhaolin1230/OnePlusWatermark.git</string>
     <string name="about_open_source">开源项目</string>
     <string name="about_open_source_git">[matisse]\n[permissionsdispatcher]</string>

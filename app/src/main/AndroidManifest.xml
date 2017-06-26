@@ -37,6 +37,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".preference.SettingActivity"
+            android:label="@string/setting_label"
             android:screenOrientation="portrait"
             android:parentActivityName=".edit.EditActivity"
             android:theme="@style/AppTheme.ActionBar" />
