@@ -3,16 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/edit_content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/edit_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary" />
+
+    <FrameLayout
+        android:id="@+id/edit_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/edit_tool_bar"
+        android:layout_above="@+id/edit_scale_seek_bar" />
+
+    <SeekBar
+        android:id="@+id/edit_scale_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/black"
+        android:alpha="0.5"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/edit_camera_button"

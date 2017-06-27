@@ -100,7 +100,7 @@ public class EditFragment extends Fragment implements EditContract.View {
             mEditBitmap = BitmapFactory.decodeFile(path, options);
             mCanvasBitmap = Bitmap.createBitmap(mEditBitmap, 0, 0, mEditBitmap.getWidth(),
                     mEditBitmap.getHeight());
-            addWatermark();
+            drawWatermark();
         } catch (Throwable ignore) {
             if (mContext != null) {
                 Toast.makeText(mContext, getString(R.string.edit_load_file_failed), Toast.LENGTH_SHORT).show();
@@ -112,7 +112,7 @@ public class EditFragment extends Fragment implements EditContract.View {
     public void onResume() {
         super.onResume();
         getSetting();
-        addWatermark();
+        drawWatermark();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class EditFragment extends Fragment implements EditContract.View {
         return mCanvasBitmap;
     }
 
-    private void addWatermark() {
+    private void drawWatermark() {
         if (mCanvasBitmap == null || mEditBitmap == null || mPaint == null) {
             return;
         }
@@ -162,12 +162,13 @@ public class EditFragment extends Fragment implements EditContract.View {
         if (watermark != null) {
             canvas.drawBitmap(mEditBitmap, 0, 0, mPaint);
             int margin = mCanvasBitmap.getWidth() / 20;
+            int textSize = (int) (margin * 0.8f);
             if (mDoubleLine) {
-                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.9f);
+                mPaint.setTextSize(textSize * 0.9f);
                 Rect titleRect = new Rect();
                 mPaint.getTextBounds(mTitle, 0, mTitle.length(), titleRect);
                 Rect subtitleRect = new Rect();
-                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.7f);
+                mPaint.setTextSize(textSize  * 0.7f);
                 mPaint.getTextBounds(mSubtitle, 0, mSubtitle.length(), subtitleRect);
                 mPaint.setTextAlign(Paint.Align.LEFT);
 
@@ -177,15 +178,15 @@ public class EditFragment extends Fragment implements EditContract.View {
                         (int) (watermark.getHeight() * scale));
                 canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
 
-                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.9f);
+                mPaint.setTextSize(textSize  * 0.9f);
                 canvas.drawText(mTitle, margin * 1.5f + scaleBitmap.getWidth(),
                         mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() + titleRect.height(), mPaint);
-                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.7f);
+                mPaint.setTextSize(textSize  * 0.7f);
                 canvas.drawText(mSubtitle, margin * 1.5f + scaleBitmap.getWidth(),
                         mCanvasBitmap.getHeight() - margin, mPaint);
 
             } else {
-                mPaint.setTextSize(BASE_TEXT_SIZE);
+                mPaint.setTextSize(textSize);
                 Rect rect = new Rect();
                 mPaint.getTextBounds(mTitle, 0, mTitle.length(), rect);
                 mPaint.setTextAlign(Paint.Align.LEFT);
