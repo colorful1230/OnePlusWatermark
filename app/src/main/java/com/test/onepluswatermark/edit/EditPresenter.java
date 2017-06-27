@@ -63,6 +63,7 @@ public class EditPresenter implements EditContract.Presenter {
             if (bitmap == null) {
                 return null;
             }
+            mView.showSaveTip();
 
             String path = FileUtils.saveBitmap(context, bitmap);
             if (TextUtils.isEmpty(path)) {

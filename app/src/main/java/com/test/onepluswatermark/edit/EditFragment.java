@@ -12,6 +12,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.test.onepluswatermark.R;
 import com.test.onepluswatermark.utils.Constants;
 import com.test.onepluswatermark.utils.FileUtils;
+
+import java.io.File;
 
 /**
  * Created by zhaolin on 17-6-11.
@@ -50,9 +53,11 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private Paint mPaint;
 
-    private String mDeviceMode;
-
     private Context mContext;
+
+    private Uri mTempFileUri;
+
+    private Handler mHandler;
 
     public static EditFragment newInstance() {
         return new EditFragment();
@@ -70,11 +75,7 @@ public class EditFragment extends Fragment implements EditContract.View {
         mPaint.setColor(Color.WHITE);
 
         mContext = getContext();
-        mDeviceMode = FileUtils.readSharePreference(mContext, KEY_EDIT_TAG);
-        if (TextUtils.isEmpty(mDeviceMode)) {
-            mDeviceMode = Build.DEVICE;
-        }
-
+        mHandler = new Handler();
         return root;
     }
 
@@ -85,6 +86,7 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     @Override
     public void showImage(Uri uri) {
+        this.mTempFileUri = uri;
         mEditImageView.setVisibility(View.VISIBLE);
         String path = FileUtils.getRealFilePath(getContext(), uri);
         showImage(path);
@@ -117,21 +119,33 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     @Override
     public void showSaveTip() {
-        if (mSavingToast == null && mContext != null) {
-            mSavingToast = Toast.makeText(mContext, getString(R.string.edit_saving),
-                    Toast.LENGTH_SHORT);
-            mSavingToast.show();
+        if (mContext != null && getActivity() != null && !getActivity().isDestroyed()) {
+            if (mHandler != null) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSavingToast == null) {
+                            mSavingToast = Toast.makeText(mContext, getString(R.string.edit_saving),
+                                    Toast.LENGTH_SHORT);
+                        }
+                        mSavingToast.show();
+                    }
+                });
+            }
+
         }
     }
 
     @Override
     public void showSaveSuccess(String path) {
-        if (mSavingToast != null) {
-            mSavingToast.cancel();
-        }
-        if (mContext != null) {
-            Toast.makeText(mContext, getString(R.string.edit_saved) + path,
-                    Toast.LENGTH_SHORT).show();
+        if (getActivity() != null && !getActivity().isDestroyed()) {
+            if (mSavingToast != null) {
+                mSavingToast.cancel();
+            }
+            if (mContext != null) {
+                Toast.makeText(mContext, getString(R.string.edit_saved) + path,
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
