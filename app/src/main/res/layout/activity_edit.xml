@@ -32,6 +32,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="24dp"
-        android:src="@drawable/ic_mode_edit" />
+        android:src="@drawable/ic_camera" />
 
 </RelativeLayout>
