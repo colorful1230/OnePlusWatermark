@@ -14,10 +14,23 @@
             android:key="subTitlePreference"
             android:title="@string/setting_subtitle" />
 
-        <!--<EditTextPreference-->
-            <!--android:key="water_mark_preference"-->
-            <!--android:summary="water_mark"-->
-            <!--android:title="Watermark" />-->
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_advance_title" >
+        <CheckBoxPreference
+            android:key="userLogoPreference"
+            android:enabled="false"
+            android:title="@string/setting_advance_user_logo"/>
+
+        <EditTextPreference
+            android:key="selectLogoPreference"
+            android:enabled="false"
+            android:title="@string/setting_advance_select_logo" />
+
+        <EditTextPreference
+            android:key="selectLocalPreference"
+            android:enabled="false"
+            android:title="@string/setting_advance_local_logo" />
 
     </PreferenceCategory>
 

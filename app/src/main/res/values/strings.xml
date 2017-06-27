@@ -22,6 +22,11 @@
     <string name="setting_subtitle">副标题</string>
     <string name="setting_double_line">是否显示两行</string>
     <string name="setting_label">设置</string>
+    <string name="setting_advance_title">高级设置</string>
+    <string name="setting_advance_user_logo">自定义水印</string>
+    <string name="setting_advance_select_logo">选择水印</string>
+    <string name="setting_advance_local_logo">选择预设水印</string>
+
 
     <string name="about_my_github">https://github.com/zhaolin1230/OnePlusWatermark.git</string>
     <string name="about_open_source">开源项目</string>
