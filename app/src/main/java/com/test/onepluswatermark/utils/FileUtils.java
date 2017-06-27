@@ -47,7 +47,7 @@ public class FileUtils {
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 MediaStore.Images.Media.insertImage(context.getContentResolver(), name, "", "");
                 return file.getAbsolutePath();
