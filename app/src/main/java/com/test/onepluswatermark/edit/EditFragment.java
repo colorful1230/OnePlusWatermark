@@ -1,9 +1,6 @@
 package com.test.onepluswatermark.edit;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,19 +13,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -46,7 +36,7 @@ public class EditFragment extends Fragment implements EditContract.View {
 
     private static final String KEY_EDIT_TAG = "tag";
 
-    private static final int BASE_TEXT_SIZE = 340;
+    private static final int BASE_TEXT_SIZE = 40;
 
     private ImageView mEditImageView;
 
@@ -76,7 +66,7 @@ public class EditFragment extends Fragment implements EditContract.View {
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setAlpha((int) (255 * 1.0f * 0.7));
+        mPaint.setAlpha((int) (255 * 1.0f * 0.6));
         mPaint.setColor(Color.WHITE);
 
         mContext = getContext();
@@ -170,28 +160,42 @@ public class EditFragment extends Fragment implements EditContract.View {
         }
 
         if (watermark != null) {
-
-            int width = mCanvasBitmap.getWidth() / 16;
-            int margin = width / 3;
-            float scale = width * 1.0f / watermark.getWidth();
-
-            Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int) (watermark.getWidth() * scale),
-                    (int) (watermark.getHeight() * scale));
-            mPaint.setTextSize(BASE_TEXT_SIZE * scale);
-            Rect rect = new Rect();
-            mPaint.getTextBounds(mDeviceMode, 0, mDeviceMode.length(), rect);
-            mPaint.setTextAlign(Paint.Align.LEFT);
-
             canvas.drawBitmap(mEditBitmap, 0, 0, mPaint);
+            int margin = mCanvasBitmap.getWidth() / 20;
             if (mDoubleLine) {
+                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.9f);
+                Rect titleRect = new Rect();
+                mPaint.getTextBounds(mTitle, 0, mTitle.length(), titleRect);
+                Rect subtitleRect = new Rect();
+                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.7f);
+                mPaint.getTextBounds(mSubtitle, 0, mSubtitle.length(), subtitleRect);
+                mPaint.setTextAlign(Paint.Align.LEFT);
+
+                int watermarkHeight = titleRect.height() / 2 * 3 + subtitleRect.height();
+                float scale = watermarkHeight * 1.0f / watermark.getHeight();
+                Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int) (watermark.getWidth() * scale),
+                        (int) (watermark.getHeight() * scale));
                 canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
-                canvas.drawText(mTitle, margin * 2 + scaleBitmap.getWidth(),
-                        mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight(), mPaint);
-                canvas.drawText(mSubtitle, margin * 2 + scaleBitmap.getWidth(),
-                        mCanvasBitmap.getHeight() - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
+
+                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.9f);
+                canvas.drawText(mTitle, margin * 1.5f + scaleBitmap.getWidth(),
+                        mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() + titleRect.height(), mPaint);
+                mPaint.setTextSize(BASE_TEXT_SIZE  * 0.7f);
+                canvas.drawText(mSubtitle, margin * 1.5f + scaleBitmap.getWidth(),
+                        mCanvasBitmap.getHeight() - margin, mPaint);
+
             } else {
+                mPaint.setTextSize(BASE_TEXT_SIZE);
+                Rect rect = new Rect();
+                mPaint.getTextBounds(mTitle, 0, mTitle.length(), rect);
+                mPaint.setTextAlign(Paint.Align.LEFT);
+
+                int watermarkHeight = rect.height() * 2;
+                float scale = watermarkHeight * 1.0f / watermark.getHeight();
+                Bitmap scaleBitmap = ThumbnailUtils.extractThumbnail(watermark, (int) (watermark.getWidth() * scale),
+                        (int) (watermark.getHeight() * scale));
                 canvas.drawBitmap(scaleBitmap, margin, mCanvasBitmap.getHeight() - scaleBitmap.getHeight() - margin, mPaint);
-                canvas.drawText(mTitle, margin * 2 + scaleBitmap.getWidth(),
+                canvas.drawText(mTitle, margin * 1.5f + scaleBitmap.getWidth(),
                         mCanvasBitmap.getHeight() - margin - scaleBitmap.getHeight() / 2 + rect.height() / 2, mPaint);
             }
             mEditImageView.setImageBitmap(mCanvasBitmap);
